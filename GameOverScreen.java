@@ -76,7 +76,6 @@ public class GameOverScreen implements Screen {
             game.setScreen(new PlayState((MyGame) game));
             dispose();
         }
-
          */
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -109,4 +108,3 @@ public class GameOverScreen implements Screen {
         stage.dispose();
     }
 }
-
