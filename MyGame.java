@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -30,14 +31,28 @@ public class MyGame extends Game {
 
 	public SpriteBatch batch;
 	public GameStateManager gsm;
-
 	public static AssetManager manager;
+	private AppPreferences preferences;
+	public static Music music;
+	public static Music audio;
+	public static Music musicLevel1;
+	public static Music dead;
+	private static int screenID;
 
 	@Override
 	public void create () {
-
+		preferences = new AppPreferences();
 		batch = new SpriteBatch();
 		manager = new AssetManager();
+
+		music = Gdx.audio.newMusic(Gdx.files.internal("MONTERO.mp3"));
+		audio = Gdx.audio.newMusic(Gdx.files.internal("fuoco.mp3"));
+		musicLevel1 = Gdx.audio.newMusic(Gdx.files.internal("Level1.mp3"));
+		dead = Gdx.audio.newMusic(Gdx.files.internal("Killed.mp3"));
+
+		music.setVolume(preferences.getMusicVolume());
+		audio.setVolume(preferences.getSoundVolume());
+		screenID = 0;
 
 		manager.finishLoading();
 
@@ -45,6 +60,13 @@ public class MyGame extends Game {
 
 	}
 
+	public static int getScreenID() {
+		return screenID;
+	}
+
+	public static void setScreenID(int screenID) {
+		MyGame.screenID = screenID;
+	}
 
 	@Override
 	public void dispose() {
