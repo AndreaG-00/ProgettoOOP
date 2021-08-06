@@ -18,7 +18,7 @@ public class Options implements Screen {
 
 
     private Viewport viewport;
-    private Stage stage;
+    public Stage stage;
     private Game game;
     private Label titleLabel;
     private Label volumeMusicLabel;
@@ -143,7 +143,6 @@ public class Options implements Screen {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
