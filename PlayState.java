@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -14,9 +15,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.*;
@@ -44,9 +47,12 @@ public class PlayState implements Screen {
 
     private AppPreferences preferences;
 
-    private boolean paused;
-    private Viewport viewport;
-    private Stage stage;
+    private static final int GAME_PAUSED = 0;
+    private static final int GAME_RUNNING = 1;
+
+    private int gameStatus;
+    private GameOptions options;
+    private Texture img;
 
     public PlayState(MyGame game){
 
@@ -60,7 +66,7 @@ public class PlayState implements Screen {
         gamePort = new FitViewport(MyGame.V_WIDTH / MyGame.PPM, MyGame.V_HEIGHT / MyGame.PPM, gamecam);
 
         hud = new Hud(game.batch);
-
+        options = new GameOptions(game.batch);
 
         maploader = new TmxMapLoader();
         map = maploader.load("level1.tmx");
@@ -77,8 +83,10 @@ public class PlayState implements Screen {
         player = new Player(this);
 
         world.setContactListener(new WorldContactListener());
-        viewport = new FitViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, ((MyGame) game).batch);
+
+        gameStatus = GAME_RUNNING;
+
+        img = new Texture("NERO.jpg");
     }
 
     public TextureAtlas getAtlas(){
@@ -94,11 +102,12 @@ public class PlayState implements Screen {
 
         MyGame.music.stop();
         MyGame.setScreenID(1);
+        MyGame.musicLevel1.setVolume(preferences.getMusicVolume());
+        MyGame.audio.setVolume(preferences.getSoundVolume());
 
         if(player.currentState != Player.State.DEAD) {
             if(preferences.isMusicEnabled()) {
                 MyGame.musicLevel1.play();
-                MyGame.musicLevel1.setVolume(preferences.getMusicVolume());
                 MyGame.musicLevel1.setLooping(true);
             }
 
@@ -112,16 +121,21 @@ public class PlayState implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
                 player.fire();
                 if(preferences.isSoundEnabled() == true)
-                MyGame.audio.play();
-            }
-            if (Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-               paused = true;
+                    MyGame.audio.play();
 
             }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                MyGame.musicLevel1.pause();
+                gamePaused();
+
+            }
+
         }
         else{
             if(preferences.isMusicEnabled()) {
                 MyGame.musicLevel1.stop();
+                MyGame.dead.setVolume(preferences.getMusicVolume());
                 MyGame.dead.play();
             }
         }
@@ -160,30 +174,16 @@ public class PlayState implements Screen {
     @Override
     public void render(float delta) {
 
-
-
-        if (paused) {
-            //game.setScreen(new Options(game));
-            //dispose();
-            if (Gdx.input.isKeyJustPressed(Input.Keys.K))
-                paused = false;
-
-
-            stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-            Gdx.gl.glClearColor(0, 0, 0, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-            //stage.act(Gdx.graphics.getDeltaTime());
-            stage.draw();
-        }
-        else {
+        if(gameStatus == GAME_RUNNING) {
             update(delta);
         }
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //renderizza il mondo di gioco
-        renderer.render();
 
+        renderer.render();
         b2dr.render(world, gamecam.combined);
 
         game.batch.setProjectionMatrix(gamecam.combined);
@@ -196,7 +196,28 @@ public class PlayState implements Screen {
 
         //disegna quello che la cam di hud vede
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+
         hud.stage.draw();
+
+        if(gameStatus == GAME_PAUSED){
+            if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)){
+                gameRunning();
+            }
+
+            GameOptions.menu.addListener(new ClickListener(){
+                public void clicked(InputEvent event, float x, float y){
+                    MyGame.musicLevel1.stop();
+                    game.setScreen(new IntroScreen(game));
+                    dispose();
+                }
+            });
+
+            // disegno il pannello per le opzioni di gioco (GameOptions)
+
+            game.batch.setProjectionMatrix(options.stage.getCamera().combined);
+            options.stage.draw();
+
+        }
 
         if(gameOver()){
 
@@ -204,6 +225,14 @@ public class PlayState implements Screen {
             dispose();
         }
 
+    }
+
+    public void gamePaused(){
+        gameStatus = GAME_PAUSED;
+    }
+
+    public void gameRunning(){
+        gameStatus = GAME_RUNNING;
     }
 
     public boolean gameOver(){
@@ -249,7 +278,7 @@ public class PlayState implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
-        stage.dispose();
+        options.dispose();
     }
 
     public Hud getHud(){ return hud; }
