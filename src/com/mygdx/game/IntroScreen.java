@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,9 +11,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import javax.swing.*;
+//import org.graalvm.compiler.nodes.calc.IntegerDivRemNode;
 
 public class IntroScreen implements Screen {
 
@@ -57,11 +62,16 @@ public class IntroScreen implements Screen {
 
         MyGame.setScreenID(0);
 
+
     }
 
     @Override
     public void show() {
-
+        if(preferences.isMusicEnabled()) {
+            MyGame.music.setVolume(preferences.getMusicVolume());
+            MyGame.music.play();
+            MyGame.music.setLooping(true);
+        }
     }
 
     @Override
@@ -88,7 +98,6 @@ public class IntroScreen implements Screen {
             game.setScreen(new PlayState((MyGame) game));
             dispose();
         }
-
          */
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
