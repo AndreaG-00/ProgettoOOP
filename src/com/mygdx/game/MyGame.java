@@ -32,6 +32,8 @@ public class MyGame extends Game {
 	public static Music music;
 	public static Music audio;
 	public static Music musicLevel1;
+	public static Music musicLevel2;
+	public static Music musicLevel3;
 	public static Music dead;
 	private static int screenID;
 
@@ -45,6 +47,8 @@ public class MyGame extends Game {
 		music = Gdx.audio.newMusic(Gdx.files.internal("MONTERO.mp3"));
 		audio = Gdx.audio.newMusic(Gdx.files.internal("fuoco.mp3"));
 		musicLevel1 = Gdx.audio.newMusic(Gdx.files.internal("Level1.mp3"));
+		musicLevel2 = Gdx.audio.newMusic(Gdx.files.internal("Level2.mp3"));
+		musicLevel3 = Gdx.audio.newMusic(Gdx.files.internal("Level3.mp3"));
 		dead = Gdx.audio.newMusic(Gdx.files.internal("Killed.mp3"));
 
 		music.setVolume(preferences.getMusicVolume());
