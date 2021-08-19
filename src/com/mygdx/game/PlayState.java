@@ -99,14 +99,23 @@ public class PlayState implements Screen {
     public void handleInput(float dt){
 
         MyGame.music.stop();
-        MyGame.setScreenID(1);
+        MyGame.setScreenID(i);
         MyGame.musicLevel1.setVolume(preferences.getMusicVolume());
+        MyGame.musicLevel2.setVolume(preferences.getMusicVolume());
+        MyGame.musicLevel3.setVolume(preferences.getMusicVolume());
         MyGame.audio.setVolume(preferences.getSoundVolume());
 
         if(player.currentState != Player.State.DEAD) {
             if(preferences.isMusicEnabled()) {
-                MyGame.musicLevel1.play();
-                MyGame.musicLevel1.setLooping(true);
+                if(i == 1) {
+                    MyGame.musicLevel1.play();
+                    MyGame.musicLevel1.setLooping(true);
+                }
+                if(i == 2){
+                    MyGame.musicLevel1.stop();
+                    MyGame.musicLevel2.play();
+                    MyGame.musicLevel2.setLooping(true);
+                }
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.W))
@@ -124,14 +133,25 @@ public class PlayState implements Screen {
             }
 
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-                MyGame.musicLevel1.pause();
+                if(i == 1)
+                    MyGame.musicLevel1.pause();
+                if(i == 2)
+                    MyGame.musicLevel2.pause();
+                if(i == 3)
+                    MyGame.musicLevel3.pause();
+
                 gamePaused();
             }
 
         }
         else{
             if(preferences.isMusicEnabled()) {
-                MyGame.musicLevel1.stop();
+                if(i == 1)
+                    MyGame.musicLevel1.stop();
+                if(i == 2)
+                    MyGame.musicLevel2.stop();
+                if(i == 3)
+                    MyGame.musicLevel3.stop();
                 MyGame.dead.setVolume(preferences.getMusicVolume());
                 MyGame.dead.play();
             }
@@ -216,7 +236,12 @@ public class PlayState implements Screen {
 
             GameOptions.menu.addListener(new ClickListener(){
                 public void clicked(InputEvent event, float x, float y){
-                    MyGame.musicLevel1.stop();
+                    if(i == 1)
+                        MyGame.musicLevel1.stop();
+                    if(i == 2)
+                        MyGame.musicLevel2.stop();
+                    if(i == 3)
+                        MyGame.musicLevel3.stop();
                     game.setScreen(new IntroScreen(game));
                     dispose();
                 }
