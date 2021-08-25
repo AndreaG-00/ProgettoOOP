@@ -19,6 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.sql.SQLException;
+
 public class PlayState implements Screen {
 
     private MyGame game;
@@ -50,12 +52,14 @@ public class PlayState implements Screen {
     private GameOptions options;
     private Texture img;
 
+
     public PlayState(MyGame game, int i){
 
         atlas = new TextureAtlas("player_zombie.pack");
 
         this.game = game;
         this.i = i;
+
 
         gamecam = new OrthographicCamera();
 
@@ -115,6 +119,11 @@ public class PlayState implements Screen {
                     MyGame.musicLevel1.stop();
                     MyGame.musicLevel2.play();
                     MyGame.musicLevel2.setLooping(true);
+                }
+                if(i == 3){
+                    MyGame.musicLevel2.stop();
+                    MyGame.musicLevel3.play();
+                    MyGame.musicLevel3.setLooping(true);
                 }
             }
 
