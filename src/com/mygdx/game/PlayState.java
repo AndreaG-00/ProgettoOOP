@@ -206,6 +206,7 @@ public class PlayState implements Screen {
     public void nextWorld(){
 
         i = i + 1;
+        preferences.setLevel(i);
         game.setScreen(new PlayState((MyGame) game, i));
 
     }
