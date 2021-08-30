@@ -25,7 +25,6 @@ public class GameOptions implements Screen {
 
     public Stage stage;
     private Viewport viewport;
-
     private Label volumeMusicLabel;
     private Label volumeSoundLabel;
     private Label musicOnOffLabel;
@@ -76,6 +75,9 @@ public class GameOptions implements Screen {
         musicCheck.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(musicCheck.isChecked() == false) {
+                    if(MyGame.musicLevel1.isPlaying())
+                        MyGame.musicLevel1.pause();
+
                     preferences.setMusicEnabled(false);
                 }
                 else {

@@ -19,8 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.sql.SQLException;
-
 public class PlayState implements Screen {
 
     private MyGame game;
@@ -55,14 +53,10 @@ public class PlayState implements Screen {
 
     public PlayState(MyGame game, int i){
 
-        atlas = new TextureAtlas("player_zombie.pack");
-
         this.game = game;
         this.i = i;
-
-
+        atlas = new TextureAtlas("player_zombie.pack");
         gamecam = new OrthographicCamera();
-
         gamePort = new FitViewport(MyGame.V_WIDTH / MyGame.PPM, MyGame.V_HEIGHT / MyGame.PPM, gamecam);
 
         //hud = new Hud(game.batch);
@@ -165,7 +159,6 @@ public class PlayState implements Screen {
                 MyGame.dead.play();
             }
         }
-
     }
 
     public void update(float dt){
@@ -191,9 +184,7 @@ public class PlayState implements Screen {
         }
 
         if(player.getX() >= 3840/MyGame.PPM){
-
             nextWorld();
-
         }
 
         //aggiorno la gamecam
@@ -202,11 +193,12 @@ public class PlayState implements Screen {
 
     }
 
-
     public void nextWorld(){
 
-        i = i + 1;
-        preferences.setLevel(i);
+        i++;
+        if(i > 3){
+            game.setScreen(new EndGame((MyGame)game));
+        }
         game.setScreen(new PlayState((MyGame) game, i));
 
     }
@@ -326,7 +318,9 @@ public class PlayState implements Screen {
     }
 
     public TiledMap setMap(int i){
-        return maploader.load("level" + i + ".tmx");
+        TiledMap map;
+        map =  maploader.load("level" + i + ".tmx");
+        return map;
     }
 
     //public Hud getHud(){ return hud; }

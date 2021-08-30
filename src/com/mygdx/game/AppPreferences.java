@@ -8,29 +8,25 @@ public class AppPreferences {
     private static final String PREF_SOUND_ENABLED = "sound enalbed";
     private static final String PREF_SOUND_VOLUME = "sound";
     private static final String PREF_NAME = "nome audio";
-    private static final String PREF_LEVEL = "livello";
 
     protected com.badlogic.gdx.Preferences getPrefs(){
         return Gdx.app.getPreferences(PREF_NAME);
     }
 
-    public int getLevel() {
-        return getPrefs().getInteger(PREF_LEVEL, 1);
-    }
-
-    public void setLevel(int level){
-        getPrefs().putInteger(PREF_LEVEL, level);
-        getPrefs().flush();
-    }
+    // getter per prendere il volume salvato o, nel caso, quello di default a metà volume (0.5)
 
     public float getMusicVolume(){
         return getPrefs().getFloat(PREF_MUSIC_VOLUME, 0.5f);
     }
 
+    // setter per settare il volume, il flush selve per salvare le modifiche su disco
+
     public void setMusicVolume(float volume){
         getPrefs().putFloat(PREF_MUSIC_VOLUME, volume);
         getPrefs().flush();
     }
+
+    // faccio lo stesso per le altre variabili
 
     public boolean isMusicEnabled(){
         return getPrefs().getBoolean(PREF_MUSIC_ENABLED, true);

@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,13 +10,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
-import javax.swing.*;
-//import org.graalvm.compiler.nodes.calc.IntegerDivRemNode;
 
 public class IntroScreen implements Screen {
 
@@ -25,7 +20,7 @@ public class IntroScreen implements Screen {
     private Stage stage;
     private Game game;
     private AppPreferences preferences;
-    private int i;
+    private int i = 1;
 
     public IntroScreen(Game game){
 
@@ -33,7 +28,6 @@ public class IntroScreen implements Screen {
         viewport = new FitViewport(MyGame.V_WIDTH, MyGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, ((MyGame) game).batch);
         preferences = new AppPreferences();
-        i = preferences.getLevel();
 
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
@@ -41,24 +35,21 @@ public class IntroScreen implements Screen {
         table.center();
         table.setFillParent(true);
 
-        Label nameLabel = new Label("DEATH OPS", font);
-        Label playLabel = new Label("PRESS ENTER TO START A NEW GAME", font);
+        Label nameLabel = new Label("NOME GIOCO", font);
+        Label playLabel = new Label("PRESS ENTER TO PLAY", font);
         Label aboutLabel = new Label("PRESS A FOR ABOUT", font);
         Label optionsLabel = new Label("PRESS Z FOR OPTIONS", font);
+        Label exitLabel = new Label("PRESS ESC FOR EXIT THE GAME", font);
 
         table.add(nameLabel).expandX();
         table.row();
-        if(i != 1){
-            Label continueLabel = new Label("PRESS SPACE TO CONTINUE", font);
-
-            table.add(continueLabel).expandX().padTop(10f);
-            table.row();
-        }
-        table.add(playLabel).expandX();
+        table.add(playLabel).expandX().padTop(10f);
         table.row();
-        table.add(aboutLabel).expandX().padTop(5f);
+        table.add(aboutLabel).expandX();
         table.row();
         table.add(optionsLabel).expandX();
+        table.row();
+        table.add(exitLabel).expandX();
 
         stage.addActor(table);
 
@@ -66,32 +57,21 @@ public class IntroScreen implements Screen {
         playLabel.setVisible(true);
         aboutLabel.setVisible(true);
         optionsLabel.setVisible(true);
+        exitLabel.setVisible(true);
 
         MyGame.setScreenID(0);
-
 
     }
 
     @Override
     public void show() {
-        if(preferences.isMusicEnabled()) {
-            MyGame.music.setVolume(preferences.getMusicVolume());
-            MyGame.music.play();
-            MyGame.music.setLooping(true);
-        }
+
     }
 
     @Override
     public void render(float delta) {
 
         if(Gdx.input.isKeyPressed(Input.Keys.ENTER)){
-            i = 1;
-            preferences.setLevel(i);
-            game.setScreen(new PlayState((MyGame) game, i));
-            dispose();
-        }
-
-        if((Gdx.input.isKeyPressed(Input.Keys.SPACE)) && (i != 1)){
             game.setScreen(new PlayState((MyGame) game, i));
             dispose();
         }
@@ -107,12 +87,10 @@ public class IntroScreen implements Screen {
             dispose();
         }
 
-        /*
-        if(Gdx.input.justTouched()) {
-            game.setScreen(new PlayState((MyGame) game));
-            dispose();
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            System.exit(0);
         }
-         */
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();

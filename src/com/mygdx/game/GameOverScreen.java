@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 
 public class GameOverScreen implements Screen {
 
@@ -75,15 +73,10 @@ public class GameOverScreen implements Screen {
             dispose();
 
         }
-
-
-        /*
-        if(Gdx.input.justTouched()) {
-            game.setScreen(new PlayState((MyGame) game));
-            dispose();
+        else if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            System.exit(0);
         }
 
-         */
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();

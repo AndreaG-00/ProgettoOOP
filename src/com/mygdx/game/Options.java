@@ -59,6 +59,7 @@ public class Options implements Screen {
         musicSlider.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 MyGame.music.setVolume(musicSlider.getValue());
+                MyGame.musicLevel1.setVolume(musicSlider.getValue());
                 preferences.setMusicVolume(musicSlider.getValue());
             }
         });
@@ -71,6 +72,8 @@ public class Options implements Screen {
         musicCheck.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(musicCheck.isChecked() == false) {
+                    if(MyGame.musicLevel1.isPlaying())
+                        MyGame.musicLevel1.pause();
                     if(MyGame.music.isPlaying())
                         MyGame.music.stop();
 
@@ -79,6 +82,8 @@ public class Options implements Screen {
                 else {
                     if(MyGame.getScreenID() == 0)
                         MyGame.music.play();
+                    else if(MyGame.getScreenID() == 1)
+                        MyGame.musicLevel1.play();
 
                     preferences.setMusicEnabled(true);
                 }
@@ -99,14 +104,14 @@ public class Options implements Screen {
         soundCheck.setChecked(preferences.isSoundEnabled());
 
         soundCheck.addListener(new ClickListener(){
-           public void clicked(InputEvent event, float x, float y){
-               if(soundCheck.isChecked() == false) {
-                   preferences.setSoundEnabled(false);
-               }
-               else {
-                   preferences.setSoundEnabled(true);
-               }
-           }
+            public void clicked(InputEvent event, float x, float y){
+                if(soundCheck.isChecked() == false) {
+                    preferences.setSoundEnabled(false);
+                }
+                else {
+                    preferences.setSoundEnabled(true);
+                }
+            }
         });
 
         table.add(titleLabel).center().size(-45,50);
