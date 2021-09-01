@@ -175,6 +175,8 @@
     public void nextWorld(){
 
         i++;
+        preferences.setLevel(i);
+        
         if(i > 3){
             game.setScreen(new EndGame((MyGame)game));
         }
