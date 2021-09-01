@@ -25,6 +25,7 @@ public class Options implements Screen {
     private Label volumeSoundLabel;
     private Label musicOnOffLabel;
     private Label soundONOffLabel;
+    private Label returnLabel;
 
     public Options (Game game) {
         this.game = game;
@@ -49,9 +50,7 @@ public class Options implements Screen {
         musicOnOffLabel = new Label("Music Enabled", font);
         volumeSoundLabel = new Label("Sound Volume", font);
         soundONOffLabel = new Label("Sound Enabled", font);
-        Label returnLabel = new Label ("Press back to return", font);
-
-        // creo lo slider per il volume
+        returnLabel = new Label ("Press back to return", font);
 
         final Slider musicSlider = new Slider(0.1f,1f,0.05f,false, skin);
         musicSlider.setValue(preferences.getMusicVolume());
@@ -59,12 +58,9 @@ public class Options implements Screen {
         musicSlider.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 MyGame.music.setVolume(musicSlider.getValue());
-                MyGame.musicLevel1.setVolume(musicSlider.getValue());
                 preferences.setMusicVolume(musicSlider.getValue());
             }
         });
-
-        // creo la checkbox per l'enable del volume
 
         final CheckBox musicCheck = new CheckBox(null, skin);
         musicCheck.setChecked(preferences.isMusicEnabled());
@@ -72,8 +68,6 @@ public class Options implements Screen {
         musicCheck.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if(musicCheck.isChecked() == false) {
-                    if(MyGame.musicLevel1.isPlaying())
-                        MyGame.musicLevel1.pause();
                     if(MyGame.music.isPlaying())
                         MyGame.music.stop();
 
@@ -82,8 +76,6 @@ public class Options implements Screen {
                 else {
                     if(MyGame.getScreenID() == 0)
                         MyGame.music.play();
-                    else if(MyGame.getScreenID() == 1)
-                        MyGame.musicLevel1.play();
 
                     preferences.setMusicEnabled(true);
                 }
@@ -104,14 +96,14 @@ public class Options implements Screen {
         soundCheck.setChecked(preferences.isSoundEnabled());
 
         soundCheck.addListener(new ClickListener(){
-            public void clicked(InputEvent event, float x, float y){
-                if(soundCheck.isChecked() == false) {
-                    preferences.setSoundEnabled(false);
-                }
-                else {
-                    preferences.setSoundEnabled(true);
-                }
-            }
+           public void clicked(InputEvent event, float x, float y){
+               if(soundCheck.isChecked() == false) {
+                   preferences.setSoundEnabled(false);
+               }
+               else {
+                   preferences.setSoundEnabled(true);
+               }
+           }
         });
 
         table.add(titleLabel).center().size(-45,50);
@@ -129,6 +121,7 @@ public class Options implements Screen {
         table.add(soundCheck).left();
         table.row();
         table.add(returnLabel).center().width(30);
+
         Gdx.input.setInputProcessor(stage);
     }
 
