@@ -1,25 +1,4 @@
-package com.mygdx.game;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.Map;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-
-public class PlayState implements Screen {
+{
 
     private MyGame game;
     private TextureAtlas atlas;
@@ -53,19 +32,18 @@ public class PlayState implements Screen {
 
     public PlayState(MyGame game, int i){
 
-        this.game = game;
-        this.i = i;
         atlas = new TextureAtlas("player_zombie.pack");
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(MyGame.V_WIDTH / MyGame.PPM, MyGame.V_HEIGHT / MyGame.PPM, gamecam);
 
-        //hud = new Hud(game.batch);
+        this.game = game;
+        this.i = i;
+
         preferences = new AppPreferences();
         maploader = new TmxMapLoader();
         options = new GameOptions(game.batch);
         map = setMap(i);
 
-        //map = maploader.load("level1.tmx");
         renderer = new OrthogonalTiledMapRenderer(map, 1  / MyGame.PPM);
 
         gamecam.position.set(gamePort.getWorldWidth() / 2, gamePort.getWorldHeight() / 2, 0);
@@ -159,6 +137,7 @@ public class PlayState implements Screen {
                 MyGame.dead.play();
             }
         }
+
     }
 
     public void update(float dt){
@@ -176,22 +155,22 @@ public class PlayState implements Screen {
             }
         }
 
-        //hud.update(dt);
-
         //setta la gamecam sul nostro player
         if(player.currentState != Player.State.DEAD) {
             gamecam.position.x = player.b2body.getPosition().x;
         }
 
         if(player.getX() >= 3840/MyGame.PPM){
+
             nextWorld();
+
         }
 
-        //aggiorno la gamecam
         gamecam.update();
         renderer.setView(gamecam);
 
     }
+
 
     public void nextWorld(){
 
@@ -226,10 +205,6 @@ public class PlayState implements Screen {
             enemy.draw(game.batch);
 
         game.batch.end();
-
-        //disegna quello che la cam di hud vede
-        //game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        //hud.stage.draw();
 
         if(gameStatus == GAME_PAUSED){
             if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)){
@@ -318,11 +293,6 @@ public class PlayState implements Screen {
     }
 
     public TiledMap setMap(int i){
-        TiledMap map;
-        map =  maploader.load("level" + i + ".tmx");
-        return map;
+        return maploader.load("level" + i + ".tmx");
     }
-
-    //public Hud getHud(){ return hud; }
-
 }
